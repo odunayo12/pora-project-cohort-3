@@ -177,6 +177,8 @@ def generate_customer():
     street = fake.street_address()
     state = random.choice(nigerian_states)
     country = "Nigeria"
+    phone_number = fake.phone_number()
+    email = fake.email()
     return {
         "id": str(uuid.uuid4()),
         "first_name": first_name,
@@ -189,7 +191,7 @@ def generate_customer():
         "is_active": is_active
     }
 
-customer_data = [generate_customer() for _ in range(1000)]
+customer_data = [generate_customer() for _ in range(53571)]
 random_dates = np.random.choice(date_range, size=len(customer_data))
 customer_df = pd.DataFrame(customer_data)
 customer_df['sign_up_date'] = random_dates
@@ -292,7 +294,7 @@ transaction_df_final = pd.concat(
 )
 
 # %%
-dir_ = 'data'
+dir_ = 'data/csv'
 table_attr = {
     'unit_of_measurement.csv':unit_of_measurement_df,
     'category.csv':category_df,
@@ -304,5 +306,30 @@ table_attr = {
 }
 
 [save_csv(v, dir_, k) for k,v in table_attr.items()]
+
+# # %%
+# from sklearn.model_selection import train_test_split
+
+# # Assuming transaction_df_final is already defined
+
+# # Sort the DataFrame by 'transaction_id' to ensure consistent splitting
+# transaction_df_final = transaction_df_final.sort_values(by='transaction_id')
+
+# # Split into 40% and 60% 
+# smaller_df, larger_df = train_test_split(transaction_df_final, test_size=0.6, random_state=42)
+# installment_1 = smaller_df.copy()
+# installment_1['paymnet_mode'] = 'card'
+# installment_1['payment_date'] = installment_1['transaction_date']
+# installment_2, installment_3_4 = train_test_split(larger_df, test_size=0.26, random_state=42)
+# installment_2['paymnet_mode'] = np.where(installment_2['quantity'] > 100, 'direct debit', 'cash bank transfer')
+
+
+
+# %%)
+
+# Now you have two DataFrames:
+# - smaller_df: Contains 40% of the data
+# - larger_df: Contains 60% of the data
+
 
 

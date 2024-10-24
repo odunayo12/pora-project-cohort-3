@@ -1,10 +1,12 @@
+# Doc
+
 The code you provided simulates a dataset for a fictional grocery store. Here's a breakdown:
 
 Data Generation:
 
 Setup:
 
-Imports necessary libraries like faker (for generating fake data), pandas (for data manipulation), uuid (for unique identifiers), datetime (for handling dates), and sklearn (for data splitting).
+Imports necessary libraries like `faker` (for generating fake data), `pandas` (for data manipulation), `uuid` (for unique identifiers), datetime (for handling dates), and `sklearn.model_selection` (for data splitting).
 Defines a list of Nigerian states.
 Creates a save_csv function to easily save DataFrames to CSV files.
 Reference Data:
@@ -19,17 +21,17 @@ Creates DataFrames for:
 Customer Data:
 
 generate_customer function: Creates a single customer with random details (name, address, credit card, activity status).
-Generates 1000 customer records and stores them in customer_df.
+Generates 1000 customer records and stores them in `customer_df`.
 Randomly assigns sign-up dates within a specified date range.
 Ensures 70% of customers are marked as active.
 Manipulates sign-up dates to ensure 20% of active customers signed up within two weeks before September 30, 2024.
 Transaction Data:
 
 `generate_transaction` function: Creates a single transaction record with a random customer, product, quantity, and date.
-Generates 10,000,000 transaction records and stores them in transaction_df.
+Generates 10,000,000 transaction records and stores them in `transaction_df`.
 Calculates the average quantity purchased in the last month.
 Ensures at least 33% of customers have their most recent transaction quantity above the average.
-+ Calculates days of inactivity for each customer and ensures about 30% meet a specific inactivity criterion.
+Calculates days of inactivity for each customer and ensures about 30% meet a specific inactivity criterion.
 October Transaction Data:
 
 Creates a list of customers who should receive promotions in October.

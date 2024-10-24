@@ -1,0 +1,83 @@
+Project jubilee_groceries {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # Jubilee Groceries Database
+    **This Database holds the data for Jubilee grocery store**
+  '''
+}
+
+TABLE promotion {
+    promo_code VARCHAR [primary key]
+    name VARCHAR
+    rate INT
+    measure VARCHAR
+    target VARCHAR
+    aim VARCHAR
+
+    Note: 'Stores user data'
+}
+
+TABLE unit_of_measurement {
+    id VARCHAR [primary key]
+    long_name VARCHAR
+    short_name VARCHAR
+    remarks TEXT
+
+    Note: 'Stores Unit of Measurement data'
+}
+
+TABLE category {
+    id VARCHAR [primary key]
+    name VARCHAR
+    long_name VARCHAR
+    remarks TEXT
+
+    Note: 'Stores `Product` Category data'
+}
+
+TABLE sub_category {
+    id VARCHAR [primary key] 
+    category_id VARCHAR [ref: > category.id]
+    name VARCHAR
+    long_name VARCHAR
+    remarks TEXT
+
+    Note: 'Stores Sub Category of the categories data'
+}
+
+TABLE product {
+    id VARCHAR [primary key]
+    name VARCHAR
+    sub_category_id VARCHAR [ref: > sub_category.id]
+    unit_of_measurement_id VARCHAR [ref: > unit_of_measurement.id]
+    price DECIMAL(10,2)
+    currency VARCHAR
+    
+    Note: 'Stores product data'
+}
+
+TABLE customer {
+    id VARCHAR(255) [PRIMARY KEY]
+    first_name VARCHAR(255)
+    last_name VARCHAR(255)
+    street VARCHAR(255)
+    state VARCHAR(255) [Note: '36 Nigerians States plus FCT']
+    country VARCHAR(255)
+    credit_card_number VARCHAR(255)
+    sign_up_date DATE
+    is_active BOOLEAN
+
+    Note: 'Stores customer details'
+}
+
+
+TABLE transaction {
+    transaction_id VARCHAR(255) [PRIMARY KEY]
+    transaction_date DATE
+    product_id VARCHAR(255) [ref: > product.id]
+    quantity INT
+    customer_id VARCHAR(255) [ref: > customer.id]
+    promo_code VARCHAR(255) [ref: > promotion.promo_code]
+
+    Note: 'Stores transaction data'
+}
