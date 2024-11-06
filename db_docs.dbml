@@ -1,28 +1,19 @@
-Project jubilee_groceries {
-  database_type: 'PostgreSQL'
+Project jubileeGroceriesDB_smileterm {
+  database_type: 'MySQL'
   Note: '''
     # Jubilee Groceries Database
-    **This Database holds the data for Jubilee grocery store**
+    **The Jubilee Groceries is an e-commerce groceries store with over 120k customers distributed across 36 states of Nigeria plus the FCT. It sells groceries and is embarking on a new promotion drive to maximize the transaction of their existing customer base.**
   '''
 }
 
-TABLE promotion {
-    promo_code VARCHAR [primary key]
-    name VARCHAR
-    rate INT
-    measure VARCHAR
-    target VARCHAR
-    aim VARCHAR
-
-    Note: 'Stores user data'
-}
 
 TABLE unit_of_measurement {
     id VARCHAR [primary key]
     long_name VARCHAR
     short_name VARCHAR
     remarks TEXT
-
+    created_on DATETIME
+    updated_on DATETIME
     Note: 'Stores Unit of Measurement data'
 }
 
@@ -31,6 +22,8 @@ TABLE category {
     name VARCHAR
     long_name VARCHAR
     remarks TEXT
+    created_on DATETIME
+    updated_on DATETIME
 
     Note: 'Stores `Product` Category data'
 }
@@ -41,17 +34,21 @@ TABLE sub_category {
     name VARCHAR
     long_name VARCHAR
     remarks TEXT
+    created_on DATETIME
+    updated_on DATETIME
 
     Note: 'Stores Sub Category of the categories data'
 }
 
 TABLE product {
-    id VARCHAR [primary key]
-    name VARCHAR
-    sub_category_id VARCHAR [ref: > sub_category.id]
-    unit_of_measurement_id VARCHAR [ref: > unit_of_measurement.id]
-    price DECIMAL(10,2)
-    currency VARCHAR
+    id VARCHAR(255)  [PRIMARY KEY]
+    name VARCHAR(255)
+    sub_category_id VARCHAR(255) [ref: > sub_category.id]
+    unit_of_measurement_id VARCHAR(255) [ref: > unit_of_measurement.id]
+    price DECIMAL(10, 2)
+    currency VARCHAR(255)
+    created_on DATETIME
+    updated_on DATETIME
     
     Note: 'Stores product data'
 }
@@ -65,19 +62,77 @@ TABLE customer {
     country VARCHAR(255)
     credit_card_number VARCHAR(255)
     sign_up_date DATE
-    is_active BOOLEAN
-
+    is_in_force is_in_force_status
+    phone VARCHAR(255)
+    email VARCHAR(255)
+    updated_on DATETIME
     Note: 'Stores customer details'
 }
 
 
-TABLE transaction {
-    transaction_id VARCHAR(255) [PRIMARY KEY]
-    transaction_date DATE
+TABLE invoice {
+    id VARCHAR(255) [PRIMARY KEY]
     product_id VARCHAR(255) [ref: > product.id]
     quantity INT
     customer_id VARCHAR(255) [ref: > customer.id]
     promo_code VARCHAR(255) [ref: > promotion.promo_code]
-
+    created_on DATETIME
+    updated_on DATETIME
+    parent_invoice_id VARCHAR(255) [ref: > parent_invoice.id]
     Note: 'Stores transaction data'
+}
+
+TABLE promotion {
+    promo_code VARCHAR(255)  [PRIMARY KEY]
+    name VARCHAR(255)
+    rate DECIMAL(5, 2)
+    measure VARCHAR(255)
+    target VARCHAR(255)
+    aim TEXT
+    created_on DATETIME
+    updated_on DATETIME 
+    Note: 'Stores promotion data'
+
+}
+
+TABLE installment {
+    id INT  [PRIMARY KEY]
+    number_of_instalments INT
+    interest_rate_pct DECIMAL(5, 2)
+    penalty_pct DECIMAL(5, 2)
+    max_installments_days INT
+    min_initial_deposit_pct DECIMAL(5, 2)
+    created_on DATETIME
+    updated_on DATETIME
+}
+
+TABLE parent_invoice {
+    customer_id VARCHAR(255) [ref: > customer.id]
+    id VARCHAR [primary key]
+    invoice_amount  DECIMAL(10, 2)
+    created_on  DATETIME  
+    no_of_installments INT [ref: > installment.id]   
+    promo_code VARCHAR [ref: > promotion.promo_code]
+    mode_of_payment VARCHAR
+    instalment_1_payment_date DATETIME
+    instalment_1_amount_paid DECIMAL(10, 2)
+    instalment_2_payment_date DATETIME
+    instalment_2_amount_paid DECIMAL(10, 2)
+    instalment_3_payment_date DATETIME
+    instalment_3_amount_paid DECIMAL(10, 2)
+}
+
+enum is_in_force_status {
+    true [note: 'customer can transact']
+    false [note: 'customer cannot transact due to default in payment or other compliance issues']
+
+}
+
+TableGroup Finance [note: 'central tables for finance operations'] {
+    parent_invoice
+    installment
+}
+
+TableGroup Operations [note: 'central tables for marketing operations'] {
+    invoice
 }

@@ -2,5 +2,6 @@
 .ipynb_checkpoints/
 *.ipynb
 .vscode/
-data-generator/analysis
+data-generator/
 data-generator/data
+*.json

@@ -1,3 +1,19 @@
 {
-  "dbt.enableNewLineagePanel": true
+  "dbt.enableNewLineagePanel": true,
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
+      "previewLimit": 50,
+      "server": "q-lar.h.filess.io",
+      "driver": "MySQL",
+      "name": "jubileeDB",
+      "group": "pora-project",
+      "database": "jubileeGroceriesDB_smileterm",
+      "username": "jubileeGroceriesDB_smileterm",
+      "password": ""
+    }
+  ]
 }

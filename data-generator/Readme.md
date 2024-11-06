@@ -1,6 +1,6 @@
 # Doc
 
-The code you provided simulates a dataset for a fictional grocery store. Here's a breakdown:
+This repository simulates a dataset for a fictional **JUBILEE GROCERIES**, an e-commerce grocery store.
 
 Data Generation:
 
@@ -46,3 +46,38 @@ This code creates a realistic (though simulated) dataset for a grocery store, wh
 Data Analysis: Analyzing customer behavior, product performance, promotion effectiveness, etc.
 Machine Learning: Training models for tasks like customer segmentation, churn prediction, product recommendation, and more.
 Testing and Development: Using the dataset to test applications or algorithms that deal with similar data.
+
+## Promotion Criteria
+
+1. Ensure at least 33% customers have their most recent transaction quantity greater than the average quantity purchased in the last 30 days
+2. Inactive when number of days from evaluation date is greater than average number of days in between transactions. Bulk_buzzer
+3. Ensure 20% of active customers have `sign_up_date` within two weeks before September 30, 2024
+
+## September Data Edit
+
+1. Fetch all September data
+2. Include inactive customers
+3. Include customers for bulk_buzzer
+
+## Generating October Data
+
+1. Signups 2 weeks before 30-09-2024 and never transacted (i.e. not in the transaction table)
+2. Inactive Customers
+3. Customers with recent purchase quantity greater than average last month purchase quantity
+4. Others in the transaction table
+5. Payment-type if
+    + 1, purchase-date = payment date, and purchase-amount = payment-amount
+    + 2, purchase-date = None, payments are split into at most 2, payable anytime within at most 2 moths from the date of purchase
+    + 3, purchase-date = None, payments are split into at most 3, payable anytime within at most 3 moths from the date of purchase
+
+## Invoice Data
+
+This will factor in Pay-small-small and immediate payment approach.
+
+1. Interest-on-installment = [`no_of_installments` – 1] %
+2. `amount-due` = [`quantity` * `price` - `promo`] X [1 + `interest_on_installment %`]
+3. `no_of_installments` if
+    + 1, `instalment_1_payment_date` = `transaction_date`, and `instalment_1_amount_paid` = `amount-due`.
+    + 2, `instalment_1_payment_date` = [`transaction_date` + random-days (1-30)], and `instalment_1_amount_paid` = [`amount-due` * `random_days (.25, .33, .72, .67)`], `instalment_2_payment_date` = [`transaction_date` + random-days (31-60)], `instalment_2_amount_paid` = {[`amount-due` - `instalment_1_amount_paid`] * `random_days (.0, 1, .97, .22)`}. Payment ensures that 1st installment is paid within the first 30 days and the 2nd, next 30 days. Also, the least payable amount on the first installment is 25%.
+    + 3, `instalment_1_payment_date` = [`transaction_date` + random-days (1-30)], and `instalment_1_amount_paid` = [`amount-due` * random (.5, .53, .79, .66)], `instalment_2_payment_date` = [`transaction_date` + random-days (31-60)], `instalment_2_amount_paid` = {[`instalment_1_amount_paid`] X random (97, .27, .66, .35)}, `instalment_3_payment_date` = [`transaction_date` + random-days (61-90)], `instalment_3_amount_paid` = {[`amount-due`] - [`instalment_1_amount_paid` + `instalment_2_amount_paid`] X random (.0, .5, .27, 1)}. Payment ensures that 1st installment is paid within the first 30 days and the 2nd, next 30 days. Also, the least payable amount on the first installment is 50%.
+    + Wherever [(`instalment_2_amount_paid`, `instalment_3_amount_paid`) = 0] update by setting [(`instalment_2_payment_date`, `instalment_3_payment_date`) = `Null`]. This will show defaults. That is if (`amount-due` > `instalment_1_amount_paid`) and `instalment_2_payment_date`=`Null` will imply default; if (`amount-due` > [`instalment_1_amount_paid` + `instalment_2_amount_paid`]) and `instalment_3_payment_date`=`Null` will imply default.

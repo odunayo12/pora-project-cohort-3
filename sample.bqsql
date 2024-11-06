@@ -1,0 +1,7 @@
+select
+    *
+from
+    `pora-academy-cohort3.jubilee_groceries.transaction_set_1` t1
+    LEFT JOIN `pora-academy-cohort3.jubilee_groceries.product` p ON t1.product_id = p.id
+limit
+    100
