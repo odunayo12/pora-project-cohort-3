@@ -8,9 +8,9 @@ The Jubilee Groceries is an e-commerce groceries store with over 120k customers 
 
 Jubilee Groceries aims to introduce a promotion campaign to achieve the following objectives.
 
-1. increase bulk/volume purchase,
-2. reduce bounce rates. Bouncers are customers those who signed up and have never transacted (that is, in customers, is_deleted is FALSE, but not in invoice),
-3. minimize inactivity or churn rates. `inactive customers`are customers who have not transacted the within 60 to 90 days from the project evaluation date (30-09-2024).
+1. increase **bulk/volume purchase**,
+2. reduce **bounce rates** by `bouncers`. Bouncers are customers, who signed up and have never transacted (that is, in `customer`, `is_in_force = True`, but are not in `invoice` table),
+3. minimize **inactivity or churn rates**. `inactive customers`are customers who have not transacted the **within 60 to 90 days** from the project evaluation date (30-09-2024).
 
 ### Requirements
 
