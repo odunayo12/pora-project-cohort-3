@@ -37,6 +37,24 @@ Jubilee Groceries operates a buy-now-pay-later scheme. It encourages customers t
     - Margin = Net Revenue + interest on instalments.
     - Receivables. What is the Debt obligation of our customers? Hint: use ageing report. Late payments also attracts some levy (see instalment table).
     - Analyze accounts reconciliation. Are there overpayments? Recommend ways to manage such disbursements.
+2. Analyze accounts reconciliation. Are there overpayments? Recommend ways to manage such disbursements.
+
+#### Stack:
+
+PostgreSQL, dbt, Looker
+
+
+## Hardcore Data analysis
+
+Jubilee Groceries maintains a MySQL database and a Postgres database as it’s analytical database, since open-source, cost-effective, and can be combined with other toolings to achieve cost effectiveness.
+
+### Requirements (Hardcore Data analysis)
+
+1. Implement its analytics database framework.
+2. Deploy `dbt` (data build tool) to manage `sql` queries and versions
+3. Establish base tables for the Finance, Operations, and Health group to help meet their requirements.
+4. Manage data engineering procedures of the team.
+Stack: PostgreSQL, MySQL, Prefect, `dbt`, `git`.
 
 ## Resources
 
