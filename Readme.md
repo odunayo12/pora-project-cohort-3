@@ -29,7 +29,7 @@ PostgreSQL, dbt, Google Looker
 
 ## Finance
 
-Jubilee Groceries operates a buy-now-pay-later scheme. It encourages customers to make installmental purchases. See the instalment table for details.
+Jubilee Groceries operates a **buy-now-pay-later** scheme. It encourages customers to make installmental purchases. See the `instalment` table for details.
 
 ### Requirement
 
@@ -54,7 +54,10 @@ Jubilee Groceries maintains a MySQL database and a Postgres database as it’s a
 2. Deploy `dbt` (data build tool) to manage `sql` queries and versions
 3. Establish base tables for the Finance, Operations, and Health group to help meet their requirements.
 4. Manage data engineering procedures of the team.
-Stack: PostgreSQL, MySQL, Prefect, `dbt`, `git`.
+
+#### Stack (Hardcore)
+
+PostgreSQL, MySQL, Prefect, `dbt`, `git`, python (dlt).
 
 ## Resources
 
