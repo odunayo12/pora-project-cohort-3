@@ -29,7 +29,7 @@ PostgreSQL, dbt, Google Looker
 
 ## Finance
 
-Jubilee Groceries operates a buy-now-pay-later scheme. It encourages customers to make instalmental purchases. See the instalment table for details.
+Jubilee Groceries operates a buy-now-pay-later scheme. It encourages customers to make installmental purchases. See the instalment table for details.
 
 ### Requirement
 
@@ -38,8 +38,7 @@ Jubilee Groceries operates a buy-now-pay-later scheme. It encourages customers t
     - Receivables. What is the Debt obligation of our customers? Hint: use ageing report. Late payments also attracts some levy (see instalment table).
     - Analyze accounts reconciliation. Are there overpayments? Recommend ways to manage such disbursements.
 
-
 ## Resources
 
-+ [Data Generator](data-generator/Readme.md)
-+ [doc](https://dbdocs.io/embed/4da9d3f6c8c9a4f46394dae6a353c67a/65ec1da794b44ed38de3d8f03726c436)
+- [Data Generator](data-generator/Readme.md)
+- [doc](https://dbdocs.io/embed/4da9d3f6c8c9a4f46394dae6a353c67a/65ec1da794b44ed38de3d8f03726c436)
