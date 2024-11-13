@@ -8,13 +8,14 @@ import numpy as np
 import os
 import algorithm as alg
 from tqdm import trange
+import time
 
-
-# %%
+#%%
+start_time = time.time()
 nigerian_states = alg.nigerian_states
-number_of_customers = 120000
-number_of_transactions = 10000000
-number_of_transactions_oct = int(.1*number_of_transactions)
+number_of_customers = 152688
+number_of_transactions = 15000000
+number_of_transactions_oct = int(.113723*number_of_transactions)
 start_date = '2024-01-01'
 end_date = '2024-09-30'
 dim_start_date = '2023-10-01'
@@ -23,47 +24,48 @@ dim_start_date_up = '2024-03-01'
 dim_end_date_up = end_date
 oct_start_date = '2024-10-01'
 oct_end_date = '2024-10-31'
-
+# t+tUff)yr.2DzF?
 
 
 # %%
 promotion_data = alg.promotion_data
-promotion_df = alg.table_update(promotion_data, dim_start_date, dim_end_date, dim_start_date_up, dim_end_date_up)
+promotion_df = alg.table_update(promotion_data, dim_start_date, dim_end_date)
+# promotion_df.drop('id', axis=1, inplace=True)
 # %%
 # Define the unit of measurement data
 unit_of_measurement_data = alg.unit_of_measurement_data
-unit_of_measurement_df = alg.table_update(unit_of_measurement_data, dim_start_date, dim_end_date, dim_start_date_up, dim_end_date_up)
+unit_of_measurement_df = alg.table_update(unit_of_measurement_data, dim_start_date, dim_end_date, 'uom')
 # %%
 # Define the category data
 category_data = alg.category_data
-category_df = alg.table_update(category_data, dim_start_date, dim_end_date, dim_start_date_up, dim_end_date_up)
+category_df = alg.table_update(category_data, dim_start_date, dim_end_date, 'cat')
 # %%
 # Define the sub_category data
 sub_category_data = alg.generate_subcategory(category_df)
-sub_category_df = alg.table_update(sub_category_data, dim_start_date, dim_end_date, dim_start_date_up, dim_end_date_up)
+sub_category_df = alg.table_update(sub_category_data, dim_start_date, dim_end_date, 'scat')
 
 #%%
 product_data = alg.generate_product(unit_of_measurement_df, sub_category_df)
-product_df = alg.table_update(product_data, dim_start_date, dim_end_date, dim_start_date_up, dim_end_date_up)
+product_df = alg.table_update(product_data, dim_start_date, dim_end_date, 'pdt')
 product_df['price'] = np.where(product_df['unit_of_measurement_id'] == 2, 
                                product_df['price'] * 110, 
-                               product_df['price'] * random.choice([815, 1070, 1420]))
+                               product_df['price'] * random.choice([273.5, 107, 142]))
 
 # %%
 customer_data = [alg.generate_customer() for _ in trange(number_of_customers)]
-customer_df = alg.table_update(customer_data, start_date, end_date, dim_start_date_up, end_date)
+customer_df = alg.table_update(customer_data, start_date, end_date, 'cus')
 
 # %%
 installment_data = alg.instalment_data
-installment_df = alg.table_update(installment_data, dim_start_date, dim_end_date, dim_start_date_up, dim_end_date_up)
+installment_df = alg.table_update(installment_data, dim_start_date, dim_end_date, 'inst')
 # %%
 
 # Filter active customers
-in_force_customers = customer_df[customer_df['is_in_force'] == True]
+in_force_customers = customer_df[customer_df['is_in_force'] == 1]
 # inforce Fasle means they might have been barred for default on the pay-small-small scheme
-# Ensure 20% of active customers have created_on within two weeks before September 30, 2024
+# Ensure 33.5% of active customers have created_on within two weeks before September 30, 2024
 two_weeks_before_end = datetime(2024, 9, 30) - timedelta(weeks=2)
-recent_signups = in_force_customers.sample(frac=0.2)
+recent_signups = in_force_customers.sample(frac=0.335)
 mod_date_range = pd.date_range(start_date, two_weeks_before_end)
 customer_df.loc[recent_signups.index, 'created_on'] = np.random.choice(mod_date_range, size=len(recent_signups))
 
@@ -71,8 +73,8 @@ customer_df.loc[recent_signups.index, 'created_on'] = np.random.choice(mod_date_
 recent_signup_ids = recent_signups['id'].tolist()
 active_customers_for_transactions = in_force_customers[~in_force_customers['id'].isin(recent_signup_ids)]
 # %%
-transaction_data = [alg.generate_transaction(active_customers_for_transactions, product_df) for _ in trange(number_of_transactions)]
-transaction_df = alg.table_update(transaction_data, start_date, end_date, dim_start_date_up, oct_end_date)
+transaction_df = alg.generate_transaction(active_customers_for_transactions, product_df, number_of_transactions)
+transaction_df = alg.table_update(transaction_df, start_date, end_date, 'inv')
 
 #%%
 # Filter transactions for September 2024
@@ -115,7 +117,7 @@ required_for_promo_in_september_df = customers_with_avg_qty_over_avg
 required_for_promo_in_june_july = june_july_customers
 required_for_promo_in_signups = recent_signup_ids
 manipulated_customer_ids = set(required_for_promo_in_june_july + required_for_promo_in_signups + required_for_promo_in_september_df)
-random_promo_customers_portion = 0.735 * len(manipulated_customer_ids)
+random_promo_customers_portion = 0.412 * len(manipulated_customer_ids)
 promo_customer_ids = random.sample(list(manipulated_customer_ids), k=int(random_promo_customers_portion))
 # check
 # set(required_for_promo_in_signups) & set(required_for_promo_in_june_july) == set() -> True
@@ -133,15 +135,16 @@ non_promo_customer_ids = random.sample(list(customers_in_transaction_but_not_man
 # %%
 oct_transaction_generator_ids = promo_customer_ids + non_promo_customer_ids
 oct_transaction_generator = pd.DataFrame({'id':oct_transaction_generator_ids})
-oct_transaction_data = [alg.generate_transaction(oct_transaction_generator, product_df) for _ in trange(number_of_transactions_oct)]
-oct_transaction_df = alg.table_update(oct_transaction_data, oct_start_date, oct_end_date, oct_start_date, oct_end_date)
+oct_transaction_df = alg.generate_transaction(oct_transaction_generator, product_df, number_of_transactions_oct)
+# oct_transaction_data = [alg.generate_transaction(oct_transaction_generator, product_df) for _ in trange(number_of_transactions_oct)]
+oct_transaction_df = alg.table_update(oct_transaction_df, oct_start_date, oct_end_date, 'invo')
 transaction_data_final = pd.concat([transaction_df, oct_transaction_df], ignore_index=True)
 #
 # %%
 ##### Parent Invoice
 #transactions on the same day by the same customer to have the same parent_invoice_id (UUID).
-transaction_data_final['parent_invoice_id'] = transaction_data_final.groupby(['created_on', 'customer_id'])['created_on'].transform(lambda _: str(uuid.uuid4()))
-invoice_counts = transaction_data_final.groupby(['created_on', 'customer_id'])['id'].nunique()
+transaction_data_final['parent_invoice_id'] = transaction_data_final['created_on'].dt.strftime('%Y%m%d') + '-' + transaction_data_final['customer_id'].astype(str) # transaction_data_final.groupby(['created_on', 'customer_id'])['created_on'].transform(lambda _: str(uuid.uuid4()))
+# invoice_counts = transaction_data_final.groupby(['created_on', 'customer_id'])['id'].nunique()
 transaction_data_final = transaction_data_final.sort_values(by=['created_on', 'customer_id'])
 transaction_data_final
 # %%
@@ -158,7 +161,7 @@ invoice_data = merged_df.groupby(['created_on_x', 'customer_id',  'parent_invoic
 print(invoice_data.shape)
 print(invoice_data.head())
 # %%
-invoice_data['promo_code'] = None
+invoice_data['promo_code'] = '0'
 desired_period_filter = invoice_data['created_on'].dt.month == 10
 invoice_data.loc[(invoice_data['customer_id'].isin(required_for_promo_in_september_df)) & (desired_period_filter), 'promo_code'] = '1001'
 invoice_data.loc[(invoice_data['customer_id'].isin(required_for_promo_in_june_july)) & (desired_period_filter), 'promo_code'] = '10001'
@@ -318,21 +321,21 @@ invoice_data.loc[multi_installment_mask, 'mode_of_payment'] = np.random.choice(
     size=sum(multi_installment_mask)
 )
 
-
-#%%
-# test_ = [alg.generate_transaction(active_customers_for_transactions, product_df) for _ in trange(10000000)]
-
 #%%
 invoice_data_final= invoice_data[
     [
-        'customer_id', 'parent_invoice_id', 
-        'invoice_amount', 'created_on', 
-        'no_of_installments','promo_code', 'mode_of_payment', 
+        'parent_invoice_id',
+        'customer_id', 
+        'no_of_installments',
+        'promo_code', 
+        'mode_of_payment', 
         'instalment_1_payment_date', 'instalment_1_amount_paid',
         'instalment_2_payment_date', 'instalment_2_amount_paid',
-        'instalment_3_payment_date', 'instalment_3_amount_paid'
+        'instalment_3_payment_date', 'instalment_3_amount_paid',
+        'created_on'
     ]
 ].rename(columns={'parent_invoice_id':'id', 'no_of_installments':'instalment_id'})
+invoice_data_final['instalment_id'] ='inst-'+ invoice_data_final['instalment_id'].astype(str)
 
 # %%
 
@@ -353,30 +356,36 @@ fact_table_attr = {
     'parent_invoice.csv':invoice_data_final,
     'invoice.csv':transaction_data_final
 }
-invoice_data['year_month'] = invoice_data['created_on'].dt.strftime('%Y-%m')
+#%%
 transaction_data_final['year_month'] = transaction_data_final['created_on'].dt.strftime('%Y-%m')
-# Group by year and month
-grouped_invoices = invoice_data.groupby('year_month')
 grouped_transactions = transaction_data_final.groupby('year_month')
 
-# %%
+invoice_data_final['year_month'] = invoice_data_final['created_on'].dt.strftime('%Y-%m')
+grouped_invoices = invoice_data_final.groupby('year_month')
+
 # Iterate through groups and save each group to a separate CSV file
 dir_fact = 'data/csv/fact_tables'
-for name, group in grouped_transactions:
-    file_dir = os.path.join(dir_fact, 'invoice')
-    os.makedirs(file_dir, exist_ok=True)
-    file_name = f'{file_dir}/invoice__{name}.csv'
-    group.drop('year_month', axis=1).to_csv(file_name, index=False)
+# grouped_invoices = grouped_invoices.drop('amount_due', axis=1)
+def save_facts_to_csv(grouped_invoices, dir_fact, tbl_name):
+    for name, group in grouped_invoices:
+        file_dir = os.path.join(dir_fact, tbl_name, name)
+        os.makedirs(file_dir, exist_ok=True)
+    
+        for i, (index, sub_group) in enumerate(group.groupby(np.arange(len(group)) // 200000)):
+            file_name = f'{file_dir}/{tbl_name}__{name}_{i}.csv'
+            sub_group.drop('year_month', axis=1).to_csv(file_name, index=False)
+
+grouped_dfs = [grouped_invoices, grouped_transactions]
+tbl_names = ['parent_invoice', 'invoice']
+
+
+[save_facts_to_csv(grouped, dir_fact, tbl_name) for grouped, tbl_name in zip(grouped_dfs, tbl_names)]
 
 #%%
-invoice_data.promo_code = None
-# %%
-for name, group in grouped_invoices:
-    file_dir = os.path.join(dir_fact, 'parent_invoice')
-    os.makedirs(file_dir, exist_ok=True)
-    file_name = f'{file_dir}/parent_invoice__{name}.csv'
-    group.drop('year_month', axis=1).to_csv(file_name, index=False)
-# TODO: remove the not so needed columns from invoice data
-# TODO: save to folder as mysql-syntax compactible sql files
-# TODO: compress as csv for github
+end_time = time.time()
+elapsed_seconds = end_time - start_time
+minutes = int(elapsed_seconds // 60)
+seconds = int(elapsed_seconds % 60)
+print(f"Time to generate transaction data: {minutes} minutes, {seconds} seconds")
+
 # %%

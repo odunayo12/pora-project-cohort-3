@@ -5,3 +5,4 @@
 data-generator/
 data-generator/data
 *.json
+__pycache__/
