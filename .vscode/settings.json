@@ -8,13 +8,13 @@
       },
       "previewLimit": 50,
       "server": "q-lar.h.filess.io",
-      "port": 3307,
+      "port": 11,
       "driver": "MySQL",
       "name": "jubileeDB",
       "group": "pora-project",
       "database": "jubileeGroceriesDB_smileterm",
       "username": "jubileeGroceriesDB_smileterm",
-      "password": "441a8e0b69ff7f670f59d28c0a4d7172912bee33"
+      "password": ""
     }
   ]
 }
