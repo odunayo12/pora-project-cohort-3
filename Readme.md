@@ -33,7 +33,7 @@ Jubilee Groceries operates a **buy-now-pay-later** scheme. It encourages custome
 
 ### Requirement
 
-1. Evaluate the following KPI’s by time (Month, quarter etc.), and installment payment type, mode of payment.
+1. Evaluate the following KPI’s by time (Month, quarter etc.), and instalment payment type, mode of payment.
     - Margin = Net Revenue + interest on instalments.
     - Receivables. What is the Debt obligation of our customers? Hint: use ageing report. Late payments also attracts some levy (see instalment table).
     - Analyze accounts reconciliation. Are there overpayments? Recommend ways to manage such disbursements.
