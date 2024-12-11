@@ -20,7 +20,7 @@ Jubilee Groceries aims to introduce a promotion campaign to achieve the followin
     - Sales Volume
     - Discounts
     - Conversion – defined as uptakes from the applied promotion
-2. Analyze customer inactivity, bulk purchase, and bouncer (customers who sign up but never transact) trends
+2. Analyze customer inactivity, bulk purchase, and bouncer (customers who signed up but never transacted) trends
 3. Share insights and recommendations where necessary.
 
 #### Stack
