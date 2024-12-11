@@ -29,7 +29,7 @@ PostgreSQL, dbt, Google Looker
 
 ## Finance
 
-Jubilee Groceries operates a **buy-now-pay-later** scheme. It encourages customers to make installmental purchases. See the `instalment` table for details.
+Jubilee Groceries operates a **buy-now-pay-later** scheme. It encourages customers to make instalmental purchases. See the `instalment` table for details.
 
 ### Requirement
 
